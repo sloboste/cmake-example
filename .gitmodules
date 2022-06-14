@@ -1,0 +1,6 @@
+[submodule "dependencies/cmocka"]
+	path = dependencies/cmocka
+	url = git@github.com:clibs/cmocka.git
+[submodule "dependencies/cJSON"]
+	path = dependencies/cJSON
+	url = git@github.com:DaveGamble/cJSON.git

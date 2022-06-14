@@ -1,0 +1,16 @@
+---
+Checks: >
+    -*,
+    bugprone-*,
+    google-*,
+    misc-*,
+    modernize-*,
+    performance-*,
+    portability-*,
+    readability-*,
+    # This lint is usually too noisy in low-level code.
+    -readability-magic-numbers
+
+WarningsAsErrors: "*"
+
+HeaderFilterRegex: "(example_app/|example_lib/).*\\.h$"
