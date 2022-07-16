@@ -28,6 +28,7 @@ add_library(example_lib)
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 target_compile_options(
     example_lib
+    # FIXME fat lto objects
     PRIVATE -std=gnu11 -Wall -Werror -Wextra -Wpedantic
 )
 if((CMAKE_BUILD_TYPE STREQUAL "Debug") OR (CMAKE_BUILD_TYPE STREQUAL ""))

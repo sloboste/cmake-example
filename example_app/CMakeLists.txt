@@ -1,12 +1,34 @@
 cmake_minimum_required(VERSION 3.23)
 
-include(CMakePrintHelpers)
-include(FeatureSummary)
+set(
+    CMAKE_MODULE_PATH
+    /usr/share/cmake/Modules
+)
+# FIXME remove
+# message(
+#     FATAL_ERROR
+#     "CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}"
+# )
+
+find_package(
+    CMakePrintHelpers
+    REQUIRED
+)
+find_package(
+    FeatureSummary
+    REQUIRED
+)
 feature_summary(
     WHAT ALL
     VAR VERBOSE_FEATURE_SUMMARY
 )
 message(VERBOSE "${VERBOSE_FEATURE_SUMMARY}")
+
+# pkg-config is the standard, build-system agnostic way to find dependencies.
+find_package(
+    FindPkgConfig
+    REQUIRED
+)
 
 project(
     example_app
@@ -22,12 +44,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 # Prefer shared libraries unless otherwise specified.
 option(BUILD_SHARED_LIBS "Build using shared libraries" TRUE)
 
+# Dependencies.
+# Note: we're making a statically linked app so build local dependencies as static libs and libs
+# that should be installed on the host system as shared libs.
+# FIXME use pkg-config
+# add_library(
+#     example_lib
+#     STATIC
+# )
+
 add_executable(example_app)
 
 # Note: CMake doesn't always add -std=x to the compiler flags when it should so specify manually.
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 target_compile_options(
     example_app
+    # FIXME fat lto objects
     PRIVATE -std=gnu11 -Wall -Werror -Wextra -Wpedantic
 )
 if((CMAKE_BUILD_TYPE STREQUAL "Debug") OR (CMAKE_BUILD_TYPE STREQUAL ""))
@@ -61,7 +93,9 @@ else()
     message(FATAL_ERROR "Unknown build type ${CMAKE_BUILD_TYPE}")
 endif()
 
-# FIXME add dependency on example_lib, build it as STATIC
+target_link_libraries(
+    example_app
+)
 
 set(
     EXAMPLE_APP_HEADERS
